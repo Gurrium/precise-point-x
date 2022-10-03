@@ -1,8 +1,6 @@
-var orig = SampleGraph.prototype.repositionPointHighlight
-SampleGraph.prototype.repositionPointHighlight = function() {
-    orig.bind(this)()
-
-    var s = this.xAxisType()
-    var n = this.metrics(s).convert(this._pointHighlighted.point[s])
-    this.$hoverXLabel.html(n)
-}
+var s = document.createElement('script')
+s.src = chrome.runtime.getURL('content.js')
+s.onload = function() {
+  this.remove()
+};
+document.getElementById('rwgps-ui-core').appendChild(s)
