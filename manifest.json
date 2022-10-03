@@ -1,6 +1,6 @@
 {
-  "name": "Precise Distance on RideWithGPS",
-  "description": "Display precise distance.",
+  "name": "Precise Distance on Ride with GPS",
+  "description": "Display precise distance in elevation graph in ridewithgps.com",
   "version": "1.0",
   "manifest_version": 3,
   "content_scripts": [
