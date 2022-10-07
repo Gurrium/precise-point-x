@@ -1,5 +1,3 @@
-console.log('Hello rwgps', rwgps)
-
 var orig = SampleGraph.prototype.repositionPointHighlight
 SampleGraph.prototype.repositionPointHighlight = function() {
     orig.bind(this)()
