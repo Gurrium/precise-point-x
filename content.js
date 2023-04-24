@@ -1,8 +1,7 @@
-var orig = SampleGraph.prototype.repositionPointHighlight
-SampleGraph.prototype.repositionPointHighlight = function() {
-    orig.bind(this)()
+rwgps.Events.bind("sg:highlightPoint", function(e) {
+  // TODO: data[e.x]で欲しい物が取れそう。
+  // あとはdataをどうにかして取ってくる。
+  // JSONを取ってきて地図上に表示していた記憶があるのでそこを除くか、何かしらのイベントにbindするか
+  console.log(this, e)
+})
 
-    var s = this.xAxisType()
-    var n = this.metrics(s).convert(this._pointHighlighted.point[s])
-    this.$hoverXLabel.html(n)
-}
