@@ -1,13 +1,45 @@
-function getRoute() {
-  return new Promise(resolve => {
-    $.getJSON(`${window.location.href}.json`, data => resolve(data))
-  })
+// thanks to https://stackoverflow.com/a/39165137
+function FindReact(dom, traverseUp = 0) {
+  const key = Object.keys(dom).find(key=>{
+    return key.startsWith("__reactFiber$") // react 17+
+      || key.startsWith("__reactInternalInstance$"); // react <17
+  });
+  const domFiber = dom[key];
+  if (domFiber == null) return null;
+
+  // react <16
+  if (domFiber._currentElement) {
+    let compFiber = domFiber._currentElement._owner;
+    for (let i = 0; i < traverseUp; i++) {
+      compFiber = compFiber._currentElement._owner;
+    }
+    return compFiber._instance;
+  }
+
+  // react 16+
+  const GetCompFiber = fiber=>{
+    let parentFiber = fiber.return;
+    while (typeof parentFiber.type == "string") {
+      parentFiber = parentFiber.return;
+    }
+    return parentFiber;
+  };
+  let compFiber = GetCompFiber(domFiber);
+  for (let i = 0; i < traverseUp; i++) {
+    compFiber = GetCompFiber(compFiber);
+  }
+  return compFiber.stateNode;
 }
 
-let route
-getRoute().then(r => { console.log(r); route = r })
+setTimeout(() => { // TODO: いい方法を見つける
+  const canvas = document.querySelector("div#sampleGraph canvas")
+  const component = FindReact(canvas)
+  var orig = component._sampleGraph.constructor.prototype.repositionPointHighlight
+  component._sampleGraph.constructor.prototype.repositionPointHighlight = function() {
+    orig.bind(this)()
 
-rwgps.Events.bind("sg:highlightPoint", function(e) {
-  console.log(route.track_points[e.x])
-})
-
+    var s = this.xAxisType()
+    var n = this.metrics(s).convert(this._pointHighlighted.point[s])
+    this.$hoverXLabel.html(n)
+  }
+}, 5000)
